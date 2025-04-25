@@ -2,40 +2,54 @@
 using Auction.DataAccess.Abstract;
 using Auction.Entities.Entities;
 using FinalAspReactAuction.Server.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Auction.Business.Concrete
+public class FavoriteService : IFavoriteService
 {
-    public class FavoriteService : IFavoriteService
+    private readonly IFavoriteDal _favoriteDal;
+    private readonly ApplicationDbContext dbContext;
+
+    public FavoriteService(IFavoriteDal favoriteDal, ApplicationDbContext dbContext)
     {
-        private readonly IFavoriteDal _context;
+        _favoriteDal = favoriteDal;
+        this.dbContext = dbContext;
+    }
 
-        public FavoriteService(IFavoriteDal context)
+    public async Task AddAsync(string userId, int carId)
+    {
+        var existingFavorite = await _favoriteDal.Get(f => f.UserId == userId && f.CarId == carId);
+
+        if (existingFavorite != null)
         {
-            _context = context;
+            throw new InvalidOperationException("This car is already in your favorites.");
         }
 
-
-
-        public async Task AddAsync(Favorite entity)
+        var favorite = new Favorite
         {
-            await _context.Add(entity);
+            CarId = carId,
+            UserId = userId
+        };
+
+        await _favoriteDal.Add(favorite);
+    }
+
+    public async Task DeleteAsync(string userId, int carId)
+    {
+        var existingFavorite = await _favoriteDal.Get(f => f.UserId == userId && f.CarId == carId);
+
+        if (existingFavorite == null)
+        {
+            throw new InvalidOperationException("This car is not in your favorites.");
         }
 
-        public async Task DeleteAsync(Favorite entity)
-        {
-            await _context.Delete(entity);
-        }
+      
 
-
-        public async Task<Favorite> GetAsync(Expression<Func<Favorite, bool>> predicate)
-        {
-            return await _context.Get(predicate);
-        }
+        await _favoriteDal.Delete(existingFavorite);
+    }
+    
+    public async Task<Favorite> GetAsync(string userId, int carId)
+    {
+        return await dbContext.Favorites.FirstOrDefaultAsync(a => a.CarId == carId && a.UserId == userId);
     }
 }

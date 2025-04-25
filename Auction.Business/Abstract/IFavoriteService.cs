@@ -11,8 +11,8 @@ namespace Auction.Business.Abstract
 {
     public interface IFavoriteService
     {
-        Task<Favorite> GetAsync(Expression<Func<Favorite, bool>> predicate);
-        Task AddAsync(Favorite entity);
-        Task DeleteAsync(Favorite entity);
+        Task<Favorite> GetAsync(string userId, int carId);
+        Task AddAsync(string userId, int carId);
+        Task DeleteAsync(string userId, int carId);
     }
 }

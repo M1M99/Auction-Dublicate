@@ -1,8 +1,9 @@
-﻿using Auction.Business.Concrete;
-using Auction.DataAccess.Abstract;
+﻿using Auction.DataAccess.Abstract;
 using Auction.Entities.Entities;
+using FinalAspReactAuction.Server.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace FinalAspReactAuction.Server.Controllers
 {
@@ -10,17 +11,16 @@ namespace FinalAspReactAuction.Server.Controllers
     [ApiController]
     public class FavoriteController : ControllerBase
     {
-        private readonly FavoriteService favoriteService;
+        private readonly IFavoriteDal _favoriteDal;
 
-        public FavoriteController(FavoriteService favoriteService)
+        public FavoriteController(IFavoriteDal favoriteDal)
         {
-            this.favoriteService = favoriteService;
+            _favoriteDal = favoriteDal;
         }
-
-        [HttpPost("Add")]
-        public async Task AddToFavorites(string userId, int carId)
+        [HttpPost]
+        public async Task AddAsync(string userId, int carId)
         {
-            var existingFavorite = await favoriteService.GetAsync(f => f.UserId == userId && f.CarId == carId);
+            var existingFavorite = await _favoriteDal.Get(f => f.UserId == userId && f.CarId == carId);
 
             if (existingFavorite != null)
             {
@@ -32,21 +32,24 @@ namespace FinalAspReactAuction.Server.Controllers
                 CarId = carId,
                 UserId = userId
             };
-
-            await favoriteService.AddAsync(favorite);
+            await _favoriteDal.Add(favorite);
         }
         [HttpDelete]
-        public async Task RemoveFromFavorites(string userId, int carId)
+        public async Task DeleteAsync(string userId, int carId)
         {
-            var existingFavorite = await favoriteService.GetAsync(f => f.UserId == userId && f.CarId == carId);
+            var existingFavorite = await _favoriteDal.Get(f => f.UserId == userId && f.CarId == carId);
 
             if (existingFavorite == null)
             {
                 throw new InvalidOperationException("This car is not in your favorites.");
             }
 
-            await favoriteService.DeleteAsync(existingFavorite);
+            await _favoriteDal.Delete(existingFavorite);
+        }
+        [HttpGet]
+        public async Task<Favorite> GetAsync(string userId, int carId)
+        {
+            return await _favoriteDal.Get(a => a.UserId == userId && a.CarId == carId);
         }
     }
 }
-

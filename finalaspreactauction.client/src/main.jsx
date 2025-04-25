@@ -1,8 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import './index.css';
+import App from './App.jsx';
 import Account from './Account/Account';
 import AddCar1 from './Components/Fetch/AddCar1';
 import AdminSide from './Components/Admin/AdminSide';
@@ -21,6 +21,7 @@ import ChatBotWithAI from './Components/Example/ChatGPTComponent';
 import Header from './Components/Page/Header';
 import Footer from './Components/Example/Example11';
 
+// Button styles for the link
 const button = {
     backgroundColor: "#0cdcf7",
     borderRadius: "10px",
@@ -32,13 +33,18 @@ const button = {
     textDecoration: "none",
     margin: "10px"
 };
-const showFooter = location.pathname !== "/login";
-createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <BrowserRouter>
+
+function AppRoutes() {
+    const location = useLocation();
+
+    // Footer'ý yalnýzca login ve NotFound sayfalarýnda göstermiyoruz
+    const showFooter = location.pathname !== "/login" && location.pathname !== "/404" && location.pathname !== "*";
+
+    return (
+        <>
             <Routes>
-                <Route path="/login" element={<Account />} key={location.key} />
-                <Route path="/" element={<App />} key={location.key} />
+                <Route path="/login" element={<Account />} />
+                <Route path="/" element={<App />} />
                 <Route path="/car/:id" element={
                     <Header>
                         <GetCarById />
@@ -56,16 +62,24 @@ createRoot(document.getElementById('root')).render(
                         {<AdminSide />}
                         {<ExitAnimation />}
                         <Link to="/admin/delete" style={button}>Delete</Link>
-                    </div>} key={location.key} />
+                    </div>} />
                 </Route>
                 <Route path={`/getCarByBrand/:id`} element={
                     <Header>
                         <GetCarByMake />
                     </Header>
-                } key={location.key}></Route>
-                <Route path="*" element={<NotFound />} key={location.key}></Route>
+                } />
+                <Route path="*" element={<NotFound />} />
             </Routes>
-            {showFooter && < Footer />}
+            {showFooter && <Footer />}
+        </>
+    );
+}
+
+createRoot(document.getElementById('root')).render(
+    <StrictMode>
+        <BrowserRouter>
+            <AppRoutes />
         </BrowserRouter>
     </StrictMode>
-)
+);

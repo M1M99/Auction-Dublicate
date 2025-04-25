@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import axios from '../../../../node_modules/axios/index';
+import axios from 'axios';
 import React, { Fragment } from 'react';
 import Loading from '../Fetch/Loading';
 

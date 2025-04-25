@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../Account/account.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faFacebook, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import axios from '../../../node_modules/axios/index';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';

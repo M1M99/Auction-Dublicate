@@ -1,58 +1,67 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { IconButton, Tooltip } from "@mui/material";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import axios from "axios";
 
-const BookmarkToggle = ({ userId, carId }) => {
-    const [isFavorite, setIsFavorite] = useState(false); // Favori durumu
-    const [loading, setLoading] = useState(true); // API durumu
+const BookmarkToggle = ({ carId, userId }) => {
+    const [isFavorited, setIsFavorited] = useState(false);
 
-    // Favori durumunu API'den al
     useEffect(() => {
-        const fetchFavoriteStatus = async () => {
+        const checkFavoriteStatus = async () => {
             try {
-                const response = await axios.get(`https://localhost:7038/api/Favorite/IsFavorite?userId=${userId}&carId=${carId}`);
-                setIsFavorite(response.data.isFavorite); // Favori durumu
+                const response = await axios.get(`https://localhost:7038/api/Favorite?userId=${userId}&carId=${carId}`);
+
+                if (response.data && response.status === 200) {
+                    setIsFavorited(true); 
+                    console.log(response.data); 
+                } else {
+                    setIsFavorited(false); 
+                    console.log(response)
+                }
             } catch (error) {
-                console.error('Error fetching favorite status:', error);
-            } finally {
-                setLoading(false); // Yükleme tamamlandýðýnda
+                setIsFavorited(false); 
+                console.error("Error checking favorite status", error);
             }
         };
 
-        fetchFavoriteStatus();
-    }, [userId, carId]);
+        checkFavoriteStatus();
+    }, [userId, carId]); 
 
-    // Favori durumu deðiþtir
-    const handleToggle = async () => {
+    const addToFavorites = async () => {
         try {
-            if (isFavorite) {
-                // Favorilerden çýkar
-                await axios.delete(`https://localhost:7038/api/Favorite?userId=${userId}&carId=${carId}`);
-            } else {
-                // Favorilere ekle
-                await axios.post('https://localhost:7038/api/Favorite/Add', { userId, carId });
+            const response = await axios.post(`https://localhost:7038/api/Favorite?userId=${userId}&carId=${carId}`);
+            if (response.status === 200) {
+                setIsFavorited(true);
             }
-            setIsFavorite(!isFavorite); // Durumu deðiþtir
         } catch (error) {
-            console.error('Error updating favorite:', error);
+            console.error("Error adding to favorites", error);
         }
     };
 
-    // Yükleniyor durumu varsa, yükleme göstergesi render et
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    const removeFromFavorites = async () => {
+        try {
+            const response = await axios.delete(`https://localhost:7038/api/Favorite?userId=${userId}&carId=${carId}`);
+            if (response.status === 200) {
+                setIsFavorited(false); 
+            }
+        } catch (error) {
+            console.error("Error removing from favorites", error);
+        }
+    };
 
     return (
-        <label className="ui-bookmark">
-            <input type="checkbox" checked={isFavorite} onChange={handleToggle} />
-            <div className="bookmark">
-                <svg viewBox="0 0 32 32">
-                    <g>
-                        <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                    </g>
-                </svg>
-            </div>
-        </label>
+        <div>
+            <Tooltip title={isFavorited ? "Remove from Favorites" : "Add to Favorites"}>
+                <IconButton onClick={isFavorited ? removeFromFavorites : addToFavorites}>
+                    {isFavorited ? (
+                        <BookmarkIcon style={{ color: "green" }} />
+                    ) : (
+                        <BookmarkBorderIcon />
+                    )}
+                </IconButton>
+            </Tooltip>
+        </div>
     );
 };
 
