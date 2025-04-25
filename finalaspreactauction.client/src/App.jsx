@@ -8,7 +8,6 @@ import ExitAnimation from "./Components/Example/Animation"
 import Carousel from "./Components/Example/CarouselUI"
 import ForAdmin from "./Components/Example/ForAdmin"
 import Card from "./Components/Example/Card"
-import AuthForm from "./Components/Example/AutoSignIn"
 
 function App() {
     return (
