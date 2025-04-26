@@ -27,17 +27,17 @@ const CarList = () => {
     const [openEditInput, setOpenEditInput] = useState(false)
     const [editBtn, setEditBtn] = useState(false);
     const [userId,setUserId] = useState("");
-    const token = localStorage.getItem("authToken");
+    //const token = localStorage.getItem("authToken");
 
-    useEffect(() => {
-        const decoded = token ? jwtDecode(token) : null;
-        if (decoded) {
-            setUserId(decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
-            setUserRole(decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
-        } else {
-            navigate("/login");
-        }
-    }, [token, navigate]);
+    //useEffect(() => {
+    //    const decoded = token ? jwtDecode(token) : null;
+    //    if (decoded) {
+    //        setUserId(decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
+    //        setUserRole(decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
+    //    } else {
+    //        navigate("/login");
+    //    }
+    //}, [token, navigate]);
     const update = (carId) => {
         setOpenEditInput(!openEditInput)
         setCarIdToUpdate(carId);
@@ -88,7 +88,11 @@ const CarList = () => {
             try {
                 const decoded = jwtDecode(token);
                 const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+            const userId1 =decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
                 setUserRole(role);
+                console.log(token)
+                console.log(role)
+                console.log(userId1)
             } catch (error) {
                 console.error("Error decoding token:", error);
                 navigate("/#");
@@ -97,6 +101,20 @@ const CarList = () => {
             navigate("/");
         }
     }, [navigate]);
+
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("authToken");
+        if (storedToken) {
+            const decoded = jwtDecode(storedToken);
+            setUserId(decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
+            setUserRole(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
+        } else {
+            navigate("/login");
+        }
+    }, [navigate]);
+
+
 
     const getMakeName = (makeId) => {
         const make = makes.find(m => m.id === makeId);
@@ -184,15 +202,13 @@ const CarList = () => {
                                             {userrole !== "Admin" && (
                                                 <tr>
                                                     <td colSpan="3">
-                                                        <BookmarkToggle carId={car.id} userId="9b104cbc-933c-4818-ae61-9bfa8ecce576" />
+                                                        <BookmarkToggle carId={car.id} userId={userId} />
+                                                        {console.log(userId)}
                                                     </td>
                                                 </tr>)}
                                             {userrole === "Admin" && editBtn && (
                                                 <div>
                                                     <td id="edit" className="absolute right-50">
-                                                        {/*<button onClick={() => update(car.id)} className="btn btn-primary">*/}
-                                                        {/*    Update*/}
-                                                        {/*</button>*/}
                                                         <Tooltip title="Edit">
                                                             <IconButton onClick={() => update(car.id)}>
                                                                 <ModeEditIcon />
@@ -200,9 +216,6 @@ const CarList = () => {
                                                         </Tooltip>
                                                     </td>
                                                     <td id="delete" className="absolute right-10">
-                                                        {/*<button onClick={() => handleAction(car.id)} className="btn btn-primary">*/}
-                                                        {/*    Delete*/}
-                                                        {/*</button>*/}
                                                         <Tooltip title="Delete">
                                                             <IconButton onClick={() => handleAction(car.id)}>
                                                                 <DeleteIcon />

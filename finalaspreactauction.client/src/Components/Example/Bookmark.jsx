@@ -63,7 +63,7 @@ const BookmarkToggle = ({ carId, userId }) => {
                             <g>
                                 <path
                                     d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"
-                                    fill={isFavorited ? "green" : "rgb(77, 77, 77)"}
+                                    fill={isFavorited ? "yellow" : "rgb(77, 77, 77)"}
                                 />
                             </g>
                         </svg>

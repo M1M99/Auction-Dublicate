@@ -174,11 +174,13 @@ namespace FinalAspReactAuction.Server.Controllers
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
+            // Token'a user.Id'yi ekliyoruz
             var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name,user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                };
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id), // User.Id burada ekleniyor
+    };
 
             foreach (var role in userRoles)
             {
@@ -188,12 +190,12 @@ namespace FinalAspReactAuction.Server.Controllers
             var token = GetToken(authClaims);
             return Ok(new
             {
-                Token = new JwtSecurityTokenHandler().
-                WriteToken(token),
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo,
-                Role = _userManager.GetRolesAsync(user)
+                Role = userRoles
             });
         }
+
         [Authorize]
         [HttpGet("VerifyToken")]
         public IActionResult VerifyToken()

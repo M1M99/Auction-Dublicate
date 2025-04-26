@@ -48,13 +48,13 @@ const Footer = () => {
 
                     <div className="flex space-x-4">
                         <a href="https://github.com/M1M99" aria-label="GitHub" className="hover:text-indigo-400 transition-colors">
-                            <Github className="h-6 w-6" />
+                            <Github className="h- w-7" />
                         </a>
-                        <a href="#" aria-label="Twitter" className="hover:text-indigo-400 transition-colors">
-                            <Twitter className="h-6 w-6" />
+                        <a href="https://x.com/" aria-label="Twitter" className="hover:text-indigo-400 transition-colors">
+                            <Twitter className="h-6 w-7" />
                         </a>
-                        <a href="#" aria-label="LinkedIn" className="hover:text-indigo-400 transition-colors">
-                            <Linkedin className="h-6 w-6" />
+                        <a href="https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin" aria-label="LinkedIn" className="hover:text-indigo-400 transition-colors">
+                            <Linkedin className="h-6 w-7" />
                         </a>
                     </div>
                 </div>

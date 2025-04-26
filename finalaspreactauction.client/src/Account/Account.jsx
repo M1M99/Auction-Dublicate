@@ -57,9 +57,9 @@ function Account() {
                 console.log("Ok", response.data);
                 setRole(response.data.role);
                 if (response.data.token) {
-                    localStorage.setItem("authToken", response.data.token)
+                    localStorage.setItem("authToken", response.data.token);
                 }
-                let role1 = response.data.role.result;
+                let role1 = response.data.role;
                 console.log(role1, "salam")
                 console.log(role1.toString())
                 if (role1.toString() === "Admin") {
