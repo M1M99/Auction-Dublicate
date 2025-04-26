@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
-
 const Auction = () => {
     const [connection, setConnection] = useState(null);
     const [currentBid, setCurrentBid] = useState(null);
@@ -57,7 +56,6 @@ const Auction = () => {
 
         try {
             const token = localStorage.getItem('authToken');
-
             const response = await fetch('https://localhost:7038/api/Auction/bid', {
                 method: 'POST',
                 headers: {

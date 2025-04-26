@@ -42,8 +42,8 @@ const Footer = () => {
 
                     <nav className="flex flex-wrap justify-center gap-6 text-sm">
                         <a href="#features" className="hover:text-indigo-400 transition-colors">Features</a>
-                        <a href="#about" className="hover:text-indigo-400 transition-colors">About</a>
-                        <a href="#contact" className="hover:text-indigo-400 transition-colors">Contact</a>
+                        <Link to="/about" className="hover:text-indigo-400 transition-colors">About</Link>
+                        <a href="/about" className="hover:text-indigo-400 transition-colors">Contact</a>
                     </nav>
 
                     <div className="flex space-x-4">
@@ -96,7 +96,6 @@ const Footer = () => {
     );
 };
 
-// Styled Components Section
 const ContentWrapper = styled.div`
   max-width: 1200px;
   margin: 40px auto 0;

@@ -20,6 +20,7 @@ import ForAdmin from './Components/Example/ForAdmin';
 import ChatBotWithAI from './Components/Example/ChatGPTComponent';
 import Header from './Components/Page/Header';
 import Footer from './Components/Example/Example11';
+import AboutPage from './Components/Page/AboutPage';
 
 // Button styles for the link
 const button = {
@@ -37,13 +38,13 @@ const button = {
 function AppRoutes() {
     const location = useLocation();
 
-    // Footer'ý yalnýzca login ve NotFound sayfalarýnda göstermiyoruz
     const showFooter = location.pathname !== "/login" && location.pathname !== "/404" && location.pathname !== "*";
 
     return (
         <>
             <Routes>
                 <Route path="/login" element={<Account />} />
+                <Route path="/about" element={<AboutPage />} />
                 <Route path="/" element={<App />} />
                 <Route path="/car/:id" element={
                     <Header>

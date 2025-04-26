@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
 import './../../index.css'
 import { Link } from 'react-router-dom';
-import Fooo2 from "../Example/Section";
 
 function Header({ adminName,children}) {
     const [showLogin, setShowLogin] = useState(false);
@@ -86,11 +85,10 @@ function Header({ adminName,children}) {
         <>
             <header>
                 <Nav>
-                    <Image src={logo} alt="Logo" />
+                    <Image src={logo} alt="Logo" className="mx-1" />
                     <Span><Link id="title" to="/#">Online Car Auction</Link></Span>
                     {!isAuthenticated ? (
                         <>
-                            <Fooo2 className="navBtn" id="login" style={{ marginLeft: "auto" }} />
                             <button className="navBtn" id="login"  onClick={() => setShowLogin(true)}>Log in</button>
                         </>)
                         :
